@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Multiple PDFs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .chat-container {
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: #fff;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .user-message {
+            background-color: #e6f3ff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .bot-message {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with Multiple PDFs 📚</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="chat-container">
+        {% for message in chat_history %}
+            <div class="{{ 'user-message' if loop.index0 % 2 == 0 else 'bot-message' }}">
+                {{ message.content | safe }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="user_question">Ask a question about your documents:</label>
+            <input type="text" name="user_question" id="user_question" placeholder="Enter your question">
+        </div>
+        <div class="form-group">
+            <label for="pdf_docs">Upload your PDFs:</label>
+            <input type="file" name="pdf_docs" id="pdf_docs" accept=".pdf" multiple>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
