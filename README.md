@@ -68,51 +68,51 @@ flowchart TB
     %% Client Layer
     subgraph "Client (Browser UI)"
         direction TB
-        IndexPage["index.html"]:::frontend
-        UploadPage["upload.html"]:::frontend
-        ChatPage["chat.html"]:::frontend
-        InputCSS["input.css"]:::frontend
-        OutputCSS["output.css"]:::frontend
+        IndexPage["index.html"]
+        UploadPage["upload.html"]
+        ChatPage["chat.html"]
+        InputCSS["input.css"]
+        OutputCSS["output.css"]
     end
 
     %% Backend Layer
-    subgraph "Backend (Flask App)":::logic
+    subgraph "Backend (Flask App)"
         direction TB
-        App_py["app.py"]:::logic
-        HtmlTemplates["htmltemplates.py"]:::logic
+        App_py["app.py"]
+        HtmlTemplates["htmltemplates.py"]
 
         subgraph "PDF Processing & Embeddings"
             direction TB
-            TextExtraction["Text Extraction (PyPDF2)"]:::logic
-            Chunking["Chunking (Langchain)"]:::logic
-            Embedding["Embedding (HuggingFace)"]:::logic
-            FAISSStore["FAISS Vector Store"]:::storage
+            TextExtraction["Text Extraction (PyPDF2)"]
+            Chunking["Chunking (Langchain)"]
+            Embedding["Embedding (HuggingFace)"]
+            FAISSStore["FAISS Vector Store"]
             TextExtraction --> Chunking --> Embedding --> FAISSStore
         end
 
         subgraph "Retrieval & LLM Service"
             direction TB
-            RetrievalChain["ConversationalRetrievalChain"]:::logic
-            LLMCall["OpenRouter API Call"]:::logic
+            RetrievalChain["ConversationalRetrievalChain"]
+            LLMCall["OpenRouter API Call"]
         end
 
-        SessionStore["Flask Session Store"]:::storage
-        FileStorage["faiss_index files"]:::storage
+        SessionStore["Flask Session Store"]
+        FileStorage["faiss_index files"]
     end
 
     %% External Service
-    OpenRouter["OpenRouter LLM Service"]:::external
+    OpenRouter["OpenRouter LLM Service"]
 
     %% Build & Deployment
-    subgraph "Build & Deployment":::config
+    subgraph "Build & Deployment"
         direction TB
-        Makefile["Makefile"]:::config
-        RenderCfg["render.yaml"]:::config
-        PackageJSON["package.json"]:::config
-        PackageLock["package-lock.json"]:::config
-        TailwindCfg["tailwind.config.js"]:::config
-        PostCSSCfg["postcss.config.js"]:::config
-        Requirements["requirements.txt"]:::config
+        Makefile["Makefile"]
+        RenderCfg["render.yaml"]
+        PackageJSON["package.json"]
+        PackageLock["package-lock.json"]
+        TailwindCfg["tailwind.config.js"]
+        PostCSSCfg["postcss.config.js"]
+        Requirements["requirements.txt"]
     end
 
     %% Data Flows
@@ -138,34 +138,6 @@ flowchart TB
     FAISSStore -->|persist| FileStorage
     App_py -->|session data| SessionStore
 
-    %% Click Events
-    click IndexPage "https://github.com/frosty-8/pdf-chatbot/blob/main/templates/index.html"
-    click UploadPage "https://github.com/frosty-8/pdf-chatbot/blob/main/templates/upload.html"
-    click ChatPage "https://github.com/frosty-8/pdf-chatbot/blob/main/templates/chat.html"
-    click InputCSS "https://github.com/frosty-8/pdf-chatbot/blob/main/static/css/input.css"
-    click OutputCSS "https://github.com/frosty-8/pdf-chatbot/blob/main/static/css/output.css"
-    click App_py "https://github.com/frosty-8/pdf-chatbot/blob/main/app.py"
-    click HtmlTemplates "https://github.com/frosty-8/pdf-chatbot/blob/main/htmltemplates.py"
-    click TextExtraction "https://github.com/frosty-8/pdf-chatbot/blob/main/app.py"
-    click RetrievalChain "https://github.com/frosty-8/pdf-chatbot/blob/main/app.py"
-    click LLMCall "https://github.com/frosty-8/pdf-chatbot/blob/main/app.py"
-    click SessionStore "https://github.com/frosty-8/pdf-chatbot/blob/main/app.py"
-    click FileStorage "https://github.com/frosty-8/pdf-chatbot/blob/main/faiss_index/index.faiss"
-    click Makefile "https://github.com/frosty-8/pdf-chatbot/tree/main/Makefile"
-    click RenderCfg "https://github.com/frosty-8/pdf-chatbot/blob/main/render.yaml"
-    click PackageJSON "https://github.com/frosty-8/pdf-chatbot/blob/main/package.json"
-    click PackageLock "https://github.com/frosty-8/pdf-chatbot/blob/main/package-lock.json"
-    click TailwindCfg "https://github.com/frosty-8/pdf-chatbot/blob/main/tailwind.config.js"
-    click PostCSSCfg "https://github.com/frosty-8/pdf-chatbot/blob/main/postcss.config.js"
-    click Requirements "https://github.com/frosty-8/pdf-chatbot/blob/main/requirements.txt"
-
-    %% Styles
-    classDef frontend fill:#ADD8E6,stroke:#333,stroke-width:1px
-    classDef logic fill:#90EE90,stroke:#333,stroke-width:1px
-    classDef storage fill:#FFA500,stroke:#333,stroke-width:1px,shape=cylinder
-    classDef external fill:#DDA0DD,stroke:#333,stroke-width:1px
-    classDef config fill:#F0E68C,stroke:#333,stroke-width:1px
-```
 
 
 ## 🚀 Getting Started
