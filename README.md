@@ -61,11 +61,14 @@ Chat with your PDFs! **PDFChatApp** is a powerful, user-friendly Flask-based web
 
 ---
 
-## Mermaid Diagram
+# PDF Chatbot Architecture
+
+This project allows users to upload PDFs and ask questions about their contents using LLMs.
+
+## 🖼️ System Architecture Diagram
 
 ```mermaid
 flowchart TB
-    %% Client Layer
     subgraph "Client (Browser UI)"
         direction TB
         IndexPage["index.html"]
@@ -75,7 +78,6 @@ flowchart TB
         OutputCSS["output.css"]
     end
 
-    %% Backend Layer
     subgraph "Backend (Flask App)"
         direction TB
         App_py["app.py"]
@@ -100,10 +102,8 @@ flowchart TB
         FileStorage["faiss_index files"]
     end
 
-    %% External Service
     OpenRouter["OpenRouter LLM Service"]
 
-    %% Build & Deployment
     subgraph "Build & Deployment"
         direction TB
         Makefile["Makefile"]
@@ -115,11 +115,9 @@ flowchart TB
         Requirements["requirements.txt"]
     end
 
-    %% Data Flows
     IndexPage -->|loads| App_py
     UploadPage -->|POST /upload| App_py
     ChatPage -->|GET/POST /chat| App_py
-
     InputCSS --> IndexPage
     InputCSS --> UploadPage
     InputCSS --> ChatPage
@@ -134,10 +132,9 @@ flowchart TB
     LLMCall -->|API request| OpenRouter
     OpenRouter -->|API response| RetrievalChain
     RetrievalChain -->|send reply| ChatPage
-
     FAISSStore -->|persist| FileStorage
     App_py -->|session data| SessionStore
-
+```
 
 
 ## 🚀 Getting Started
