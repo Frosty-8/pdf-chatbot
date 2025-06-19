@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDFChatApp Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1a1b26;
+            --bg-secondary: #24283b;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a6adc8;
+            --accent: #7dd3fc;
+            --code-bg: #2e3440;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            text-align: center;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #ffffff;
+            margin: 1.5rem 0 1rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin: 1rem 0 0.5rem;
+        }
+
+        p, ul, ol {
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.6s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+
+        ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+            animation-delay: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .code-block {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #4b5563;
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: #6b7280;
+            transform: scale(1.05);
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+        }
+
+        .copy-btn::after {
+            content: 'Copy';
+            position: absolute;
+            top: -2rem;
+            right: 0;
+            background: #4b5563;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(5px);
+        }
+
+        .copy-btn:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .copy-btn.copied::after {
+            content: 'Copied!';
+            opacity: 1;
+            background: #10b981;
+        }
+
+        .mermaid {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            opacity: 0;
+            transform: scale(0.95);
+            animation: scaleIn 0.8s ease-out forwards;
+            animation-delay: 0.4s;
+        }
+
+        .toc {
+            position: sticky;
+            top: 2rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            width: 250px;
+            float: right;
+            opacity: 0;
+            transform: translateX(20px);
+            animation: fadeInRight 0.6s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .toc h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc li {
+            margin-bottom: 0.5rem;
+        }
+
+        .toc a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: var(--accent);
+        }
+
+        .collapsible {
+            cursor: pointer;
+            padding: 1rem;
+            background: #4b5563;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .collapsible:hover {
+            background: #6b7280;
+        }
+
+        .content {
+            display: none;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .toc {
+                float: none;
+                width: 100%;
+                position: relative;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">Project Overview</a></li>
+                <li><a href="#architecture">System Architecture</a></li>
+                <li><a href="#index-html">index.html Description</a></li>
+                <li><a href="#setup">Setup Instructions</a></li>
+                <li><a href="#usage">Usage Examples</a></li>
+                <li><a href="#advanced">Advanced Configuration</a></li>
+            </ul>
+        </div>
+
+        <h1>PDFChatApp Documentation</h1>
+
+        <div class="card" id="overview">
+            <h2>Project Overview</h2>
+            <p>PDFChatApp is a sophisticated Flask-based web application designed to allow users to upload multiple PDF documents and interact with their content through natural language queries. Powered by Langchain, OpenRouter, and advanced NLP tools, it transforms PDFs into a searchable, conversational knowledge base.</p>
+            <ul>
+                <li><strong>Multi-PDF Upload:</strong> Upload multiple PDFs in one session for seamless processing.</li>
+                <li><strong>Intelligent Q&A:</strong> Ask questions in natural language and receive accurate, context-aware responses.</li>
+                <li><strong>Conversation History:</strong> Maintains session-based chat history for continuous interactions.</li>
+                <li><strong>Modern UI:</strong> Responsive interface built with Tailwind CSS for cross-device compatibility.</li>
+                <li><strong>Secure Processing:</strong> Ensures user data privacy with isolated session management.</li>
+            </ul>
+            <p>Technologies include Flask, PyPDF2, Langchain (CharacterTextSplitter, HuggingFaceEmbeddings, FAISS), OpenAI via OpenRouter, python-dotenv, and Tailwind CSS.</p>
+        </div>
+
+        <div class="card" id="architecture">
+            <h2>System Architecture</h2>
+            <div class="mermaid">
+                graph TB
+                    subgraph "Client Layer"
+                        A1[Browser UI]
+                        A2[IndexPage: index.html]
+                        A3[UploadPage: upload.html]
+                        A4[ChatPage: chat.html]
+                        A5[Styles: input.css/output.css]
+                        A2 --> A1
+                        A3 --> A1
+                        A4 --> A1
+                        A5 --> A1
+                    end
+
+                    subgraph "Backend Layer"
+                        B1[Flask App: app.py]
+                        B2[Templates: htmltemplates.py]
+                        subgraph "PDF Processing"
+                            B3[Text Extraction: PyPDF2]
+                            B4[Chunking: Langchain]
+                            B5[Embeddings: HuggingFace]
+                            B6[Vector Store: FAISS]
+                            B3 --> B4 --> B5 --> B6
+                        end
+                        subgraph "Retrieval & LLM"
+                            B7[ConversationalRetrievalChain]
+                            B8[OpenRouter API]
+                            B7 --> B8
+                        end
+                        B9[Session Store]
+                        B10[File Storage: faiss_index]
+                        B1 --> B3
+                        B1 --> B7
+                        B7 --> B6
+                        B6 --> B10
+                        B1 --> B9
+                    end
+
+                    subgraph "Build & Deployment"
+                        C1[Makefile]
+                        C2[render.yaml]
+                        C3[package.json]
+                        C4[tailwind.config.js]
+                        C5[postcss.config.js]
+                        C6[requirements.txt]
+                    end
+
+                    A2 -->|GET /| B1
+                    A3 -->|POST /upload| B1
+                    A4 -->|GET/POST /chat| B1
+                    B8 -->|API Response| B7 --> A4
+                    style A1 fill:#2e3440,stroke:#7dd3fc
+                    style B1 fill:#2e3440,stroke:#7dd3fc
+                    style C1 fill:#2e3440,stroke:#7dd3fc
+            </div>
+        </div>
+
+        <div class="card" id="index-html">
+            <h2>index.html Description</h2>
+            <p>The <code>index.html</code> file is the primary entry point for PDFChatApp's user interface, providing a form for uploading PDFs and submitting questions. Key features include:</p>
+            <ul>
+                <li>Chat container for displaying conversation history.</li>
+                <li>Form for uploading multiple PDFs and asking questions.</li>
+                <li>Inline CSS for basic styling (superseded by Tailwind in other templates).</li>
+                <li>Flash message support for user feedback.</li>
+            </ul>
+            <h3>Code</h3>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code class="language-html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Multiple PDFs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .chat-container {
+            border: 1px solid #ccc;
+            padding: 15px;
+            background-color: #fff;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .user-message {
+            background-color: #e6f3ff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .bot-message {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat with Multiple PDFs 📚</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="chat-container">
+        {% for message in chat_history %}
+            <div class="{{ 'user-message' if loop.index0 % 2 == 0 else 'bot-message' }}">
+                {{ message.content | safe }}
+            </div>
+        {% endfor %}
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="user_question">Ask a question about your documents:</label>
+            <input type="text" name="user_question" id="user_question" placeholder="Enter your question">
+        </div>
+        <div class="form-group">
+            <label for="pdf_docs">Upload your PDFs:</label>
+            <input type="file" name="pdf_docs" id="pdf_docs" accept=".pdf" multiple>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="card" id="setup">
+            <h2>Setup Instructions</h2>
+            <p>To set up and run PDFChatApp locally, follow these steps:</p>
+            <ol>
+                <li>Clone the repository: <code>git clone &lt;repository_url&gt;</code></li>
+                <li>Create a virtual environment: <code>python -m venv venv</code></li>
+                <li>Activate the virtual environment:
+                    <ul>
+                        <li>Windows: <code>.\venv\Scripts\activate</code></li>
+                        <li>macOS/Linux: <code>source venv/bin/activate</code></li>
+                    </ul>
+                </li>
+                <li>Install Python dependencies: <code>pip install -r requirements.txt</code></li>
+                <li>Install frontend dependencies (optional): <code>npm install</code></li>
+                <li>Create a <code>.env</code> file:
+                    <div class="code-block">
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        <pre><code class="language-bash">
+OPENROUTER_API_KEY="your_openrouter_api_key_here"
+YOUR_SITE_URL="http://127.0.0.1:5000"
+YOUR_SITE_NAME="PDFChatApp"
+                        </code></pre>
+                    </div>
+                </li>
+                <li>Run the application: <code>python app.py</code> or <code>make run</code></li>
+            </ol>
+        </div>
+
+        <div class="card" id="usage">
+            <h2>Usage Examples</h2>
+            <p>Here's how to use PDFChatApp effectively:</p>
+            <div class="collapsible" onclick="toggleCollapsible(this)">Upload PDFs</div>
+            <div class="content">
+                <p>Navigate to the upload page, select multiple PDFs, and click "Upload and Process". The app will extract text and create a vector store for querying.</p>
+            </div>
+            <div class="collapsible" onclick="toggleCollapsible(this)">Ask Questions</div>
+            <div class="content">
+                <p>Go to the chat page, enter questions like "What is the main topic of the document?" or "Summarize page 5". Responses are based on the PDF content.</p>
+            </div>
+            <div class="collapsible" onclick="toggleCollapsible(this)">Reset Session</div>
+            <div class="content">
+                <p>Click "Upload a Different PDF" to clear the session and start with new documents.</p>
+            </div>
+        </div>
+
+        <div class="card" id="advanced">
+            <h2>Advanced Configuration</h2>
+            <p>For production or advanced use cases, consider the following:</p>
+            <ul>
+                <li><strong>Scaling:</strong> Use Gunicorn with Nginx for handling concurrent users.</li>
+                <li><strong>Persistent Storage:</strong> Replace in-memory FAISS with a database like PostgreSQL for session data.</li>
+                <li><strong>Model Optimization:</strong> Experiment with different HuggingFace embedding models or OpenRouter LLMs for performance.</li>
+                <li><strong>Security:</strong> Implement HTTPS, input validation, and secure file storage for sensitive PDFs.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                background: '#24283b',
+                primaryColor: '#2e3440',
+                secondaryColor: '#4b5563',
+                lineColor: '#7dd3fc'
+            }
+        });
+
+        // Copy code functionality
+        function copyCode(button) {
+            const code = button.parentElement.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // Collapsible sections
+        function toggleCollapsible(element) {
+            const content = element.nextElementSibling;
+            content.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
